@@ -72,3 +72,8 @@ Use the repo <\!-- Github address goes here -->
 ### Windows XP:
 
     Copy the directory to: "C:\Documents and Settings\<username>\Application Data\Sublime Text 2\Packages"
+
+## Todo
+
+- Replace based on order of selection as well as their direction. (Difficult)
+- Scroll to matching pattern like sublime's default find window. (Easy)
