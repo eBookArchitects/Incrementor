@@ -59,7 +59,7 @@ Linux: [Ctrl + G, Ctrl + R]
 
 ## Installing
 
-Use the repo <\!-- Github address goes here -->
+Use github <\!-- Github address goes here -->
 
 ### Linux:
 
@@ -77,3 +77,8 @@ Use the repo <\!-- Github address goes here -->
 
 - Replace based on order of selection as well as their direction. (Difficult)
 - Scroll to matching pattern like sublime's default find window. (Easy)
+- Allow prepending 0s to the initial number. (001, 002, 003, 004, etc.)
+
+## License
+
+[Creative Commons Attribution 2.0 Generic](http://creativecommons.org/licenses/by/2.0/)

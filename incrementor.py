@@ -7,28 +7,9 @@ Generate a sequence of numbers
 using a special replace expression
 in your regular exression.
 
-Example
-
-<li>My</li>
-<li>List</li>
-
-Find:
-<li>(.*?)</li>
-Replace:
-<li>\i(1,1)\1</li>
-
-<li>1 My</li>
-<li>2 List</li>
-
 @authors: Chris, Toby
-@copy: MIT License
+@copy: Creative Commons Attribution 2.0 Generic (http://creativecommons.org/licenses/by/2.0/)
 @python-ver: Python 3.2
-
-TODO: Allow prepending 0s to the initial number.
-(ex. \i(01, 1) : 01,02,03,04,etc.)
-(ex. \i(000, 10) : 000,010,020,030,etc.)
-
-TODO: Pass selection region and adjust and use those for highlight and find replace.
 '''
 
 
