@@ -53,13 +53,15 @@ Example (After):
 
 ## Using
 
+Use the keybinding to prompt for your find and replace.
+
 Windows: [Ctrl + G, Ctrl + R]
 Mac OSX: [Super + G, Super + R]
 Linux: [Ctrl + G, Ctrl + R]
 
 ## Installing
 
-Use github <\!-- Github address goes here -->
+Use Github [here](https://github.com/eBookArchitects/Incrementor.git) or [Sublime Package Control](http://wbond.net/sublime_packages/package_control)
 
 ### Linux:
 
@@ -77,7 +79,14 @@ Use github <\!-- Github address goes here -->
 
 - Replace based on order of selection as well as their direction. (Difficult)
 - Scroll to matching pattern like sublime's default find window. (Easy)
-- Allow prepending 0s to the initial number. (001, 002, 003, 004, etc.)
+- Allow prepending 0s to the initial number. (001, 002, 003, 004, etc.) (Intermediate)
+- Add number of replaced items in statusbar after completion. (Intermediate)
+
+## Contributors
+
+Don't forget to add yourself!
+
+[eBook Architects](info@ebookarchitects.com), [Chris](cdcasey@gmail.com), [Toby](codenamekt@gmail.com), [AJ](anthony@ebookarchitects.com)
 
 ## License
 
