@@ -1,4 +1,3 @@
 [
-	// My Generator Replace
-	{ "keys": ["ctrl+g", "ctrl_r"], "command": "gen_rep" }
+	{ "keys": ["ctrl+g", "ctrl_r"], "command": "incrementor_prompt" }
 ]
