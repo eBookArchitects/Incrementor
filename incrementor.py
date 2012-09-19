@@ -6,9 +6,8 @@ Created on Jul 10, 2012
 A Sublime Text 2 Plugin that can generate a sequence of numbers
 using search and replace.
 
-@authors: [Chris](cdcasey@gmail.com), [Toby](codenamekt@gmail.com)
 @copy: [Creative Commons Attribution 2.0 Generic](http://creativecommons.org/licenses/by/2.0/)
-@python-ver: Python 3.2
+@python-ver: Python 2.6
 '''
 
 
