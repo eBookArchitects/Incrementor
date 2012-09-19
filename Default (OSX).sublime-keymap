@@ -1,0 +1,3 @@
+[
+	{ "keys": ["super+g", "super_r"], "command": "gen_rep_prompt" }
+]
