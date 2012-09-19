@@ -1,6 +1,6 @@
 # Sublime Text 2 Plugin: The Incrementor
 
-Used instead of the normal search and replace when needing to use incremental numbers `\i` in your replace.
+A Sublime Text 2 Plugin that can generate a sequence of numbers using search and replace.
 
 Example (Before):
 

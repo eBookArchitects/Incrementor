@@ -3,12 +3,11 @@
 '''
 Created on Jul 10, 2012
 
-Generate a sequence of numbers
-using a special replace expression
-in your regular exression.
+A Sublime Text 2 Plugin that can generate a sequence of numbers
+using search and replace.
 
-@authors: Chris, Toby
-@copy: Creative Commons Attribution 2.0 Generic (http://creativecommons.org/licenses/by/2.0/)
+@authors: [Chris](cdcasey@gmail.com), [Toby](codenamekt@gmail.com)
+@copy: [Creative Commons Attribution 2.0 Generic](http://creativecommons.org/licenses/by/2.0/)
 @python-ver: Python 3.2
 '''
 
