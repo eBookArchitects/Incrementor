@@ -1,7 +1,3 @@
 [
-	{ "keys": ["ctrl+j"], "command": "code_intel_auto_complete" },
-	{ "keys": ["ctrl+f3"], "command": "goto_python_definition" },
-
-	// My Generator Replace
-	{ "keys": ["ctrl+g", "ctrl+r"], "command": "gen_rep_prompt" }
+	{ "keys": ["ctrl+g", "ctrl+r"], "command": "incrementor_prompt" }
 ]
