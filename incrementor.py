@@ -138,11 +138,20 @@ class IncrementorCommand(object):
         finally:
             self.view.end_edit(editMe)
 
-    def make_step(self, start=1, step=1):
+    def make_step(self, start=1, step=1, repeat_after=None):
+        # optional repeat_after argument specifies the limit of the incrementation.
+        # after the limit is reached, return to the start value and resume incrementing
         num = start
         while True:
             yield num
             num = num + step
+            if repeat_after:# return to start value if we're past repeat_after
+                if step < 0:
+                    if num < repeat_after:
+                        num = start
+                else:
+                    if num > repeat_after:
+                        num = start
 
     def inc_replace(self, pattern_list, match):
         replace_string = ''
@@ -161,7 +170,9 @@ class IncrementorCommand(object):
                 replace_list[i] = self.make_step()
             elif re.match(r"^\\i\(.+?\)$", replace_list[i]):
                 arg_list = [int(num) for num in re.split(r'\\i|\(|,| |\)', replace_list[i]) if num != '']
-                if len(arg_list) == 2:
+                if len(arg_list) == 3:
+                    replace_list[i] = self.make_step(start=arg_list[0], step=arg_list[1], repeat_after=arg_list[2])
+                elif len(arg_list) == 2:
                     replace_list[i] = self.make_step(start=arg_list[0], step=arg_list[1])
                 else:
                     replace_list[i] = self.make_step(start=arg_list[0])
