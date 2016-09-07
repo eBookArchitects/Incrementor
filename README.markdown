@@ -2,6 +2,8 @@
 
 A Sublime Text 2 Plugin that can generate a sequence of numbers using search and replace.
 
+There is a Sublime Text 3 port available [here](https://github.com/born2c0de/Incrementor).
+
 Example (Before):
 
     10. Bob
