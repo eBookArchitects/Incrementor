@@ -111,14 +111,14 @@ class IncrementorCommand(object):
                     adjust = 0
                     for sRegion in startRegions:
                         matchRegions = self.match_gen(find)
-                        print "This" , sRegion
+                        # print( "This" , sRegion )
                         if adjust:
                             newBeg = sRegion.begin() + adjust
                             newEnd = sRegion.end() + adjust
                             sRegion = sublime.Region(newBeg, newEnd)
-                            print "Adjusted" , sRegion
-                            print adjust
-                            print view.substr(sRegion)
+                            # print( "Adjusted" , sRegion )
+                            # print( adjust )
+                            # print( view.substr(sRegion) )
                         for mRegion in matchRegions:
                             if sRegion.contains(mRegion):
                                 myString = view.substr(mRegion)
