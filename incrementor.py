@@ -18,35 +18,38 @@ from functools import partial
 from types import GeneratorType
 
 
-class IncrementorHighlight(object):
+class State(object):
+    last_find_input = ""
+    last_replace_input = ""
+    starterRegions = []
+
+
+class IncrementorHighlightHelperCommand(sublime_plugin.TextCommand):
     """
     Highlights regions or regular expression matches.
     """
 
-    def __init__(self, view):
-        self.view = view
-
     def window(self):
         return self.view.window()
 
-    def run(self, matchArg=None, startRegionsArg=None):
-        startRegions = startRegionsArg
-        match = matchArg
+    def run(self, edit, regex):
+        starterRegions = State.starterRegions
         view = self.view
-        if startRegions and match:
-            matchRegions = view.find_all(match)
+        print('regex', regex)
+        if starterRegions and regex:
+            matchRegions = view.find_all(regex)
 
             # Check if regions are in the given selections.
             positiveMatch = list()
             # Create list of non-empty regions.
-            nEmptyRegions = [sRegion for sRegion in startRegions if not sRegion.empty()]
+            nEmptyRegions = [sRegion for sRegion in starterRegions if not sRegion.empty()]
 
             # If there is at least one empty region proceed to check in matches are in region.
             if len(nEmptyRegions) == 0:
                 positiveMatch = matchRegions
             else:
                 for mRegion in matchRegions:
-                    for sRegion in startRegions:
+                    for sRegion in starterRegions:
                         if sRegion.contains(mRegion):
                             positiveMatch.append(mRegion)
 
@@ -55,13 +58,10 @@ class IncrementorHighlight(object):
             view.erase_regions("Incrementor")
 
 
-class IncrementorCommand(object):
+class IncrementorInternalHelperCommand(sublime_plugin.TextCommand):
     """
     Highlights regions or regular expression matches.
     """
-
-    def __init__(self, view):
-        self.view = view
 
     def window(self):
         return self.view.window()
@@ -76,7 +76,8 @@ class IncrementorCommand(object):
             else:
                 break
 
-    def run(self, find, replace, startRegionsArg=None):
+    def run(self, edit, find, replace):
+        starterRegions=State.starterRegions
 
         def regionSort(thisList):
             for region in thisList:
@@ -87,56 +88,53 @@ class IncrementorCommand(object):
 
             return sorted(thisList, key=lambda region: region.begin())
 
-        startRegions = startRegionsArg
-        startRegions = regionSort(startRegions)
+        starterRegions = starterRegions
+        starterRegions = regionSort(starterRegions)
         view = self.view
         reFind = re.compile(find)
         myReplace = self.parse_replace(replace)
-        try:
-            editMe = self.view.begin_edit()
-            if startRegions and replace:
-                # Check if regions are in the given selections.
-                positiveMatch = list()
-                # Create list of non-empty regions.
-                nEmptyRegions = [sRegion for sRegion in startRegions if not sRegion.empty()]
 
-                # If there is at least one empty region proceed to check in matches are in region.
-                if len(nEmptyRegions) == 0:
-                    positiveMatch = self.match_gen(find)
-                    for match in positiveMatch:
-                        myString = view.substr(match)
-                        newString = reFind.sub(partial(self.inc_replace, myReplace), myString)
-                        view.replace(editMe, match, newString)
-                else:
-                    adjust = 0
-                    for sRegion in startRegions:
-                        matchRegions = self.match_gen(find)
-                        # print( "This" , sRegion )
-                        if adjust:
-                            newBeg = sRegion.begin() + adjust
-                            newEnd = sRegion.end() + adjust
-                            sRegion = sublime.Region(newBeg, newEnd)
-                            # print( "Adjusted" , sRegion )
-                            # print( adjust )
-                            # print( view.substr(sRegion) )
-                        for mRegion in matchRegions:
-                            if sRegion.contains(mRegion):
-                                myString = view.substr(mRegion)
-                                newString = reFind.sub(partial(self.inc_replace, myReplace), myString)
-                                view.erase(editMe, mRegion)
-                                charLen = view.insert(editMe, mRegion.begin(), newString)
-                                adjustment = charLen - mRegion.size()
-                                adjust = adjust + adjustment
-                                newEnd = sRegion.end() + adjustment
-                                sRegion = sublime.Region(sRegion.begin(), newEnd)
+        if starterRegions and replace:
+            # Check if regions are in the given selections.
+            # Create list of non-empty regions.
+            nEmptyRegions = [sRegion for sRegion in starterRegions if not sRegion.empty()]
 
-            else:
+            # If there is at least one empty region proceed to check in matches are in region.
+            if len(nEmptyRegions) == 0:
+                positiveMatch = self.match_gen(find)
                 for match in positiveMatch:
                     myString = view.substr(match)
                     newString = reFind.sub(partial(self.inc_replace, myReplace), myString)
-                    view.replace(editMe, match, newString)
-        finally:
-            self.view.end_edit(editMe)
+                    view.replace(edit, match, newString)
+            else:
+                adjust = 0
+                for sRegion in starterRegions:
+                    matchRegions = self.match_gen(find)
+                    # print( "This" , sRegion )
+                    if adjust:
+                        newBeg = sRegion.begin() + adjust
+                        newEnd = sRegion.end() + adjust
+                        sRegion = sublime.Region(newBeg, newEnd)
+                        # print( "Adjusted" , sRegion )
+                        # print( adjust )
+                        # print( view.substr(sRegion) )
+                    for mRegion in matchRegions:
+                        if sRegion.contains(mRegion):
+                            myString = view.substr(mRegion)
+                            newString = reFind.sub(partial(self.inc_replace, myReplace), myString)
+                            view.erase(edit, mRegion)
+                            charLen = view.insert(edit, mRegion.begin(), newString)
+                            adjustment = charLen - mRegion.size()
+                            adjust = adjust + adjustment
+                            newEnd = sRegion.end() + adjustment
+                            sRegion = sublime.Region(sRegion.begin(), newEnd)
+
+        else:
+            positiveMatch = self.match_gen(find)
+            for match in positiveMatch:
+                myString = view.substr(match)
+                newString = reFind.sub(partial(self.inc_replace, myReplace), myString)
+                view.replace(edit, match, newString)
 
     def make_step(self, start=1, step=1, repeat_after=None):
         # optional repeat_after argument specifies the limit of the incrementation.
@@ -157,7 +155,7 @@ class IncrementorCommand(object):
         replace_string = ''
         for i in range(len(pattern_list)):
             if isinstance(pattern_list[i], GeneratorType):
-                replace_string = replace_string + str(pattern_list[i].next())
+                replace_string = replace_string + str(next(pattern_list[i]))
             else:
                 replace_string = replace_string + match.expand(pattern_list[i])
         return replace_string
@@ -179,44 +177,40 @@ class IncrementorCommand(object):
         return replace_list
 
 
-class IncrementorPromptCommand(sublime_plugin.WindowCommand):
+class IncrementorPromptCommand(sublime_plugin.TextCommand):
     """
     Prompts for find and replace strings.
     """
 
-    def view(self):
-        return self.window.active_view()
+    def run(self, edit):
+        self.window = self.view.window() or sublime.active_window()
+        State.starterRegions = []
 
-    def run(self):
-        self.starterRegions = []
         for sRegion in self.window.active_view().sel():
             region = sublime.Region(sRegion.end(), sRegion.begin())
-            self.starterRegions.append(region)
-        self.window.active_view().sel().clear()
+            State.starterRegions.append(region)
         self.get_find()
 
     def find(self, find):
         self.findStr = find
+        State.last_input = find
         self.get_replace()
 
     def highlighter(self, regex=None):
-        highlighter = IncrementorHighlight(view=self.view())
-        if regex:
-            highlighter.run(matchArg=regex, startRegionsArg=self.starterRegions)
-        else:
-            highlighter.run()
+        self.window.run_command( "incrementor_highlight_helper", { 'regex': regex } )
 
     def get_find(self):
-        self.window.show_input_panel("Find:", unicode(), self.find, self.highlighter, self.highlighter)
+        self.window.show_input_panel("Find:", State.last_find_input, self.find, self.highlighter, self.highlighter)
 
     def replace(self, replace):
         self.replaceStr = replace
+
         # Removes highlight.
-        self.window.active_view().run_command("gen_rep_highlight")
+        self.view.erase_regions("Incrementor")
+
         # Runs the replace.
-        # self.window.active_view().run_command("gen_rep", {"find": self.findStr, "replace": self.replaceStr, "startRegionsArg": self.starterRegions})
-        IncrementorIt = IncrementorCommand(view=self.view())
-        IncrementorIt.run(find=self.findStr, replace=self.replaceStr, startRegionsArg=self.starterRegions)
+        arguments = { 'find': self.findStr, 'replace': self.replaceStr }
+        self.window.run_command( "incrementor_internal_helper", arguments )
 
     def get_replace(self):
-        self.window.show_input_panel("Replace:", unicode(), self.replace, None, self.highlighter)
+        self.window.show_input_panel("Replace:", State.last_replace_input, self.replace, None, self.highlighter)
