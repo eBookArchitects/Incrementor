@@ -1,3 +1,0 @@
-[
-	{ "keys": ["ctrl+g", "ctrl+r"], "command": "incrementor_prompt" }
-]
