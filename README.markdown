@@ -55,11 +55,7 @@ Example (After):
 
 ## Using
 
-Use the keybinding to prompt for your find and replace.
-
-Windows: [Ctrl + G, Ctrl + R]
-Mac OSX: [Super + G, Super + R]
-Linux: [Ctrl + G, Ctrl + R]
+Use the Command Palette (`Ctrl+Shift+P`) and search for `Incrementor: Generate a sequence of numbers` to prompt for your find and replace.
 
 ## Installing
 
